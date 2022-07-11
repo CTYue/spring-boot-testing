@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.chuwa</groupId>
-	<artifactId>spring-boot-testing</artifactId>
+	<artifactId>tutorial-testing</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot-testing</name>
+	<name>tutorial-testing</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>11</java.version>
