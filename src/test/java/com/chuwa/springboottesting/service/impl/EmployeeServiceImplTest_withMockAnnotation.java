@@ -15,12 +15,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 
 /**
@@ -101,5 +104,90 @@ public class EmployeeServiceImplTest_withMockAnnotation {
 
         // then - verify the output
         verify(employeeRepository, never()).save(any(Employee.class));
+    }
+
+    @Test
+    public void testGetAllEmployees() {
+
+        //given - precondition or setup
+        Employee employee1 = Employee.builder()
+                .id(2L)
+                .firstName("John")
+                .lastName("Snow")
+                .email("KnowNothing@gmail.com")
+                .build();
+
+        given(employeeRepository.findAll()).willReturn(List.of(employee, employee1));
+
+        // when - action or the behaviour that we are going test
+        List<Employee> employees = employeeService.getAllEmployees();
+
+        // then - verify the output
+        Assertions.assertThat(employees).isNotNull();
+        Assertions.assertThat(employees.size()).isEqualTo(2);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testGetAllEmployees_Negative_emptyEmployees() {
+
+        //given - precondition or setup
+        given(employeeRepository.findAll()).willReturn(Collections.emptyList());
+
+        // when - action or the behaviour that we are going test
+        List<Employee> employees = employeeService.getAllEmployees();
+
+        // then - verify the output
+        Assertions.assertThat(employees).isEmpty();
+        Assertions.assertThat(employees.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void testFindByEmployeeId() {
+        //given - precondition or setup
+        given(employeeRepository.findById(anyLong())).willReturn(Optional.of(employee));
+
+        // when - action or the behaviour that we are going test
+        Employee savedEmployee = employeeService.getEmployeeById(this.employee.getId()).get();
+
+        // then - verify the output
+        Assertions.assertThat(savedEmployee).isNotNull();
+    }
+
+    @Test
+    public void testUpdateEmployee() {
+
+        //given - precondition or setup
+        String email = "John.Snow@gmail.com";
+        String fName = "Ygritte";
+        given(employeeRepository.save(employee)).willReturn(employee);
+        employee.setEmail(email);
+        employee.setFirstName(fName);
+
+        // when - action or the behaviour that we are going test
+        Employee updatedEmployee = employeeService.updateEmployee(employee);
+
+        // then - verify the output
+        Assertions.assertThat(updatedEmployee.getEmail()).isEqualTo(email);
+        Assertions.assertThat(updatedEmployee.getFirstName()).isEqualTo(fName);
+    }
+
+    /**
+     * void method is different with non-void method
+     */
+    @Test
+    public void testDeleteEmployee() {
+        long id = 1L;
+
+        //given - precondition or setup
+        willDoNothing().given(employeeRepository).deleteById(anyLong());
+
+        // when - action or the behaviour that we are going test
+        employeeService.deleteEmployee(id);
+
+        // then - verify the output
+        verify(employeeRepository, times(1)).deleteById(id);
     }
 }
