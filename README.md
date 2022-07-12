@@ -11,3 +11,5 @@
 5. v1.3.1-controller: test RUD
 ## Integration Test
 1. v2.1.0-it : integration test
+2. v2.1.2-testcontainer
+3. v2.1.2-testcontainer-singleton
