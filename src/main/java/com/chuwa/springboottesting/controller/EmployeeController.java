@@ -1,6 +1,7 @@
 package com.chuwa.springboottesting.controller;
 
 import com.chuwa.springboottesting.model.Employee;
+import com.chuwa.springboottesting.service.CommonService;
 import com.chuwa.springboottesting.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,9 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+    @Autowired
+    private CommonService commonService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,5 +66,10 @@ public class EmployeeController {
 
         return new ResponseEntity<String>("Employee deleted successfully!.", HttpStatus.OK);
 
+    }
+
+    @GetMapping("/search/{emailDomain}")
+    public List<Employee> getAllEmployeesByEmailDomain(@PathVariable(name = "emailDomain") String emailDomain) {
+        return commonService.getEmailEmployees(emailDomain);
     }
 }
