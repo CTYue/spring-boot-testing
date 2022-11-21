@@ -10,7 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+
+//import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class EmployeeRespositoryTests {
@@ -42,8 +44,8 @@ public class EmployeeRespositoryTests {
         Employee savedEmployee = employeeRepository.save(employee);
 
         // then - verify the output
-        assertThat(savedEmployee).isNotNull();
-        assertThat(savedEmployee.getId()).isGreaterThan(0);
+        assertNotNull(savedEmployee);
+        assertNotEquals(savedEmployee.getId(), 0); // different attsertThat().greaterThan()
     }
 
 
@@ -67,8 +69,8 @@ public class EmployeeRespositoryTests {
         List<Employee> employeeList = employeeRepository.findAll();
 
         // then - verify the output
-        assertThat(employeeList).isNotNull();
-        assertThat(employeeList.size()).isEqualTo(2);
+        assertNotNull(employeeList);
+        assertEquals(employeeList.size(), 2);
     }
 
     /**
@@ -84,7 +86,7 @@ public class EmployeeRespositoryTests {
         Employee employeeDB = employeeRepository.findById(employee.getId()).get();
 
         // then - verify the output
-        assertThat(employeeDB).isNotNull();
+        assertNotNull(employeeDB);
     }
 
     /**
@@ -100,7 +102,7 @@ public class EmployeeRespositoryTests {
         Employee employeeDB = employeeRepository.findByEmail(employee.getEmail()).get();
 
         // then - verify the output
-        assertThat(employeeDB).isNotNull();
+        assertNotNull(employeeDB);
     }
 
     /**
@@ -119,8 +121,8 @@ public class EmployeeRespositoryTests {
         Employee updatedEmployee =  employeeRepository.save(savedEmployee);
 
         // then - verify the output
-        assertThat(updatedEmployee.getEmail()).isEqualTo("Richard@gmail.com");
-        assertThat(updatedEmployee.getFirstName()).isEqualTo("Richard");
+        assertEquals(updatedEmployee.getEmail(), "Richard@gmail.com");
+        assertEquals(updatedEmployee.getFirstName(), "Richard");
     }
 
     /**
@@ -137,7 +139,7 @@ public class EmployeeRespositoryTests {
         Optional<Employee> employeeOptional = employeeRepository.findById(employee.getId());
 
         // then - verify the output
-        assertThat(employeeOptional).isEmpty();
+        assertNotNull(employeeOptional); // isEmpty?
     }
 
     /**
@@ -155,7 +157,7 @@ public class EmployeeRespositoryTests {
         Employee savedEmployee = employeeRepository.findByJPQL(firstName, lastName);
 
         // then - verify the output
-        assertThat(savedEmployee).isNotNull();
+        assertNotNull(savedEmployee);
     }
 
     /**
@@ -173,7 +175,7 @@ public class EmployeeRespositoryTests {
         Employee savedEmployee = employeeRepository.findByJPQLNamedParams(firstName, lastName);
 
         // then - verify the output
-        assertThat(savedEmployee).isNotNull();
+        assertNotNull(savedEmployee);
     }
 
     /**
@@ -189,7 +191,7 @@ public class EmployeeRespositoryTests {
         Employee savedEmployee = employeeRepository.findByNativeSQL(employee.getFirstName(), employee.getLastName());
 
         // then - verify the output
-        assertThat(savedEmployee).isNotNull();
+        assertNotNull(savedEmployee);
     }
 
     /**
@@ -205,7 +207,7 @@ public class EmployeeRespositoryTests {
         Employee savedEmployee = employeeRepository.findByNativeSQLNamed(employee.getFirstName(), employee.getLastName());
 
         // then - verify the output
-        assertThat(savedEmployee).isNotNull();
+        assertNotNull(savedEmployee);
     }
 
 }
