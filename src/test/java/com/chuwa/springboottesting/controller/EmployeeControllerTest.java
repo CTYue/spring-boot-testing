@@ -14,7 +14,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
+//import static org.mockito.BDDMockito.*;
+import org.mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -62,8 +63,8 @@ public class EmployeeControllerTest {
     public void testCreateEmployee() throws Exception {
 
         //given - precondition or setup
-        given(employeeService.saveEmployee(any(Employee.class)))
-                .willAnswer((invocation) -> invocation.getArgument(0));
+        Mockito.when(employeeService.saveEmployee(any(Employee.class)))
+                .thenReturn(employee);
 
         // when - action or the behaviour that we are going test
         ResultActions res = mockMvc.perform(post("/api/v1/employees")
@@ -85,7 +86,8 @@ public class EmployeeControllerTest {
         List<Employee> employees = new ArrayList<>();
         employees.add(employee);
         employees.add(Employee.builder().firstName("chuwa1").lastName("america1").email("chuwa1@gmail.com").build());
-        given(employeeService.getAllEmployees()).willReturn(employees);
+        Mockito.when(employeeService.getAllEmployees()).
+                thenReturn(employees);
 
         // when - action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(get("/api/v1/employees"));
@@ -102,7 +104,7 @@ public class EmployeeControllerTest {
     public void testGetByEmployeeId() throws Exception {
         // given - precondition or setup
         long employeeId = 1L;
-        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
+        Mockito.when(employeeService.getEmployeeById(employeeId)).thenReturn(Optional.of(employee));
 
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(get("/api/v1/employees/{id}", employeeId));
@@ -122,7 +124,7 @@ public class EmployeeControllerTest {
     public void testInvalidEmployeeId_ReturnEmpty() throws Exception {
         // given - precondition or setup
         long employeeId = 1L;
-        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
+        Mockito.when(employeeService.getEmployeeById(employeeId)).thenReturn(Optional.empty());
 
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(get("/api/v1/employees/{id}", employeeId));
@@ -143,9 +145,9 @@ public class EmployeeControllerTest {
                 .lastName("Snow")
                 .email("John@gmail.com")
                 .build();
-        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
-        given(employeeService.updateEmployee(any(Employee.class)))
-                .willAnswer((invocation) -> invocation.getArgument(0));
+        Mockito.when(employeeService.getEmployeeById(employeeId)).thenReturn(Optional.of(employee));
+        Mockito.when(employeeService.updateEmployee(any(Employee.class)))
+                .thenAnswer((invocation) -> invocation.getArgument(0));
 
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(put("/api/v1/employees/{id}", employeeId)
@@ -172,9 +174,9 @@ public class EmployeeControllerTest {
                 .lastName("Snow")
                 .email("John@gmail.com")
                 .build();
-        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
-        given(employeeService.updateEmployee(any(Employee.class)))
-                .willAnswer((invocation) -> invocation.getArgument(0));
+        Mockito.when(employeeService.getEmployeeById(employeeId)).thenReturn(Optional.empty());
+        Mockito.when(employeeService.updateEmployee(any(Employee.class)))
+                .thenAnswer((invocation) -> invocation.getArgument(0));
 
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(put("/api/v1/employees/{id}", employeeId)
@@ -191,7 +193,7 @@ public class EmployeeControllerTest {
     public void testDeleteByEmployeeId_Return200() throws Exception {
         // given - precondition or setup
         long employeeId = 1L;
-        willDoNothing().given(employeeService).deleteEmployee(employeeId);
+        Mockito.doNothing().when(employeeService).deleteEmployee(employeeId);
 
         // when -  action or the behaviour that we are going test
         ResultActions response = mockMvc.perform(delete("/api/v1/employees/{id}", employeeId));
